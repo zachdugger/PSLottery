@@ -1,7 +1,7 @@
-package com.pixelmon.lottery;
+package com.blissy.lottery;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.pixelmon.lottery.PixelmonLottery.Currency;
+import com.blissy.lottery.PixelmonLottery.Currency;
 import com.pixelmonmod.pixelmon.client.gui.GuiResources;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -13,7 +13,6 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.RegistryObject;
@@ -21,9 +20,6 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 public class LotteryContainer extends Container {
@@ -84,13 +80,13 @@ public class LotteryContainer extends Container {
             this.children.add(this.amountField);
 
             // Add currency buttons (3 across one row)
-            var pokeCoinsButton = addButton(new Button(
+            var serverCurrencyButton = addButton(new Button(
                     this.leftPos + 20,
                     this.topPos + 40,
                     40,
                     20,
-                    new StringTextComponent("PokeCoins"),
-                    button -> selectCurrency(Currency.POKECOINS)
+                    new StringTextComponent("Coins"),
+                    button -> selectCurrency(Currency.SERVER_CURRENCY)
             ));
 
             var tokensButton = addButton(new Button(
@@ -252,8 +248,9 @@ public class LotteryContainer extends Container {
         }
 
         private int getCurrencyBalance(PlayerEntity player, Currency currency) {
-            // This would need to be implemented based on your server's economy system
-            // For now, returning a placeholder value
+            // This would need a client-side implementation or a server query
+            // For now, returning a placeholder value or last known balance
+            // In a real implementation, you would query the server for this info
             return 1000;
         }
 

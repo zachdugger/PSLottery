@@ -1,7 +1,6 @@
-package com.pixelmon.lottery;
+package com.blissy.lottery;
 
-import com.pixelmon.lottery.PixelmonLottery.Currency;
-import com.pixelmonmod.pixelmon.Pixelmon;
+import com.blissy.lottery.PixelmonLottery.Currency;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = PixelmonLottery.MOD_ID)
 public class OfflineRewardHandler {
@@ -95,8 +93,9 @@ public class OfflineRewardHandler {
                         player.sendMessage(
                                 new StringTextComponent(
                                         "§6[Lottery] §rWhile you were away, you won the " + currency.getName() +
-                                                " lottery" + timeStr + "! Your prize of " + amount + " " +
-                                                currency.getName() + " has been added to your account."
+                                                " lottery" + timeStr + "! Your prize of " +
+                                                CurrencyUtil.formatCurrency(currency, amount, true) +
+                                                " has been added to your account."
                                 ),
                                 player.getUUID()
                         );
@@ -121,18 +120,9 @@ public class OfflineRewardHandler {
     }
 
     private static void awardPrize(ServerPlayerEntity player, Currency currency, int amount) {
-        // This implementation depends on how your server manages currencies
-        // Here's a placeholder implementation
-        switch (currency) {
-            case POKECOINS -> Pixelmon.moneyManager.getBankAccount(player.getUUID()).add(amount);
-            case TOKENS -> {
-                // Implement token award based on your server's token system
-                LOGGER.info("Awarded {} {} tokens (implement this)", player.getName().getString(), amount);
-            }
-            case GEMS -> {
-                // Implement gem award based on your server's gem system
-                LOGGER.info("Awarded {} {} gems (implement this)", player.getName().getString(), amount);
-            }
-        }
+        // Use our CurrencyUtil to award the prize
+        CurrencyUtil.addCurrency(player, currency, amount);
+        LOGGER.info("Awarded offline prize of {} {} to {}",
+                amount, currency.getName(), player.getName().getString());
     }
 }
