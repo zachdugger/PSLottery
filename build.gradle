@@ -1,0 +1,84 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+group = 'com.blissy'
+version = '1.0.0'
+description = 'Weekly lottery system with multiple currency support'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+    mavenCentral()
+
+    // Spigot repository
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+
+    // Paper repository
+    maven {
+        url = 'https://papermc.io/repo/repository/maven-public/'
+    }
+
+    // For Vault and other Bukkit-related dependencies
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+}
+
+dependencies {
+    // Use an older version of Spigot API that's compatible with Java 11
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+
+    // Vault for economy integration
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+
+    // TokenManager from local jar
+    compileOnly files('libs/TokenManager-3.2.8.jar')
+
+    // GemExtension from local jar (your custom plugin)
+    compileOnly files('libs/GemExtension-1.0.0.jar')
+}
+
+processResources {
+    // Set duplicates strategy to handle duplicates
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    // Include plugin.yml and config files
+    from('src/main/resources') {
+        include 'plugin.yml'
+        include 'config.yml'
+
+        // Replace version
+        expand(
+                version: project.version
+        )
+    }
+}
+
+shadowJar {
+    archiveBaseName.set(project.name)
+    archiveClassifier.set('')
+    archiveVersion.set(project.version.toString())
+}
+
+build {
+    dependsOn shadowJar
+}
+
+// Force UTF-8 encoding
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// Create libs directory if it doesn't exist
+task createLibsDir {
+    doLast {
+        mkdir 'libs'
+    }
+}
+
+compileJava.dependsOn createLibsDir
