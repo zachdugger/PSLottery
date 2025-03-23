@@ -1,6 +1,6 @@
 package com.blissy.lottery.managers;
 
-import com.blissy.lottery.BlissyLottery;
+import com.blissy.lottery.Lottery;
 import com.blissy.lottery.currency.Currency;
 import com.blissy.lottery.utils.TimeUtil;
 import org.bukkit.Bukkit;
@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 public class LotteryManager {
-    private final BlissyLottery plugin;
+    private final Lottery plugin;
     private final Map<String, Map<UUID, Long>> entries = new HashMap<>();
     private LocalDateTime nextDrawingTime;
     private BukkitTask drawingTask;
@@ -34,7 +34,7 @@ public class LotteryManager {
     private static final long TICKS_PER_MINUTE = 20 * 60;
     private static final long NOTIFICATION_INTERVAL = 30; // minutes
 
-    public LotteryManager(BlissyLottery plugin) {
+    public LotteryManager(Lottery plugin) {
         this.plugin = plugin;
         this.dataFile = new File(plugin.getDataFolder(), "lottery_data.yml");
         this.offlineRewardsFolder = new File(plugin.getDataFolder(), "offline");

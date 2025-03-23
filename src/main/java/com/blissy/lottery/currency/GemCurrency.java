@@ -50,4 +50,9 @@ public class GemCurrency implements Currency {
     public boolean hasBalance(Player player, long amount) {
         return getBalance(player) >= amount;
     }
+
+    @Override
+    public String getColoredName() {
+        return "§a" + getSymbol() + " " + getName() + "§r";
+    }
 }

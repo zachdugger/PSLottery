@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.logging.Level;
 
 /**
- * Main class for the BlissyLottery plugin.
+ * Main class for the Lottery plugin.
  */
 public class Lottery extends JavaPlugin {
     private static Lottery instance;

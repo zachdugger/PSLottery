@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.OptionalLong;
+import java.util.logging.Level;
 
 /**
  * Implementation of Currency interface for TokenManager
@@ -33,22 +35,24 @@ public class TokenCurrency implements Currency {
 
     @Override
     public long getBalance(Player player) {
-        return tokenPlugin.getTokenManager().getTokens(player).orElse(0L);
+        OptionalLong tokens = tokenPlugin.getTokens(player);
+        return tokens.orElse(0L);
     }
 
     @Override
     public boolean withdraw(Player player, long amount) {
-        return tokenPlugin.getTokenManager().removeTokens(player, amount);
+        return tokenPlugin.removeTokens(player, amount);
     }
 
     @Override
     public boolean deposit(Player player, long amount) {
-        return tokenPlugin.getTokenManager().addTokens(player, amount);
+        return tokenPlugin.addTokens(player, amount);
     }
 
     @Override
     public boolean hasBalance(Player player, long amount) {
-        return getBalance(player) >= amount;
+        OptionalLong tokens = tokenPlugin.getTokens(player);
+        return tokens.isPresent() && tokens.getAsLong() >= amount;
     }
 
     @Override

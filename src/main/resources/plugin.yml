@@ -1,0 +1,23 @@
+name: PSLottery
+version: 1.0.0
+main: com.blissy.lottery.Lottery
+description: Weekly lottery system with multiple currency support
+api-version: 1.16
+authors: [Blissy]
+depend: [Vault]
+softdepend: [TokenManager, GemExtension]
+
+commands:
+  lottery:
+    description: Access the weekly lottery system
+    usage: /lottery [info|enter|help]
+    aliases: [lot, jackpot]
+    permission: lottery.use
+
+permissions:
+  pslottery.use:
+    description: Allows access to the lottery
+    default: true
+  pslottery.admin:
+    description: Allows access to lottery admin commands
+    default: op

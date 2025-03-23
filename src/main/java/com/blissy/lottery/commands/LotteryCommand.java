@@ -1,6 +1,6 @@
 package com.blissy.lottery.commands;
 
-import com.blissy.lottery.BlissyLottery;
+import com.blissy.lottery.Lottery;
 import com.blissy.lottery.currency.Currency;
 import com.blissy.lottery.gui.LotteryGUI;
 import com.blissy.lottery.utils.TimeUtil;
