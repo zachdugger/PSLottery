@@ -50,12 +50,17 @@ processResources {
     // Include plugin.yml and config files
     from('src/main/resources') {
         include 'plugin.yml'
-        include 'config.yml'
-
-        // Replace version
+        // Replace version in plugin.yml
         expand(
                 version: project.version
         )
+    }
+
+    // Include config.yml without template processing
+    from('src/main/resources') {
+        include 'config.yml'
+        // Disable template processing for this file
+        filter { line -> line }
     }
 }
 

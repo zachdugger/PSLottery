@@ -10,14 +10,14 @@ softdepend: [TokenManager, GemExtension]
 commands:
   lottery:
     description: Access the weekly lottery system
-    usage: /lottery [info|enter|help]
+    usage: /lottery [info|enter|help|reload]
     aliases: [lot, jackpot]
-    permission: lottery.use
+    permission: pslottery.use
 
 permissions:
-  lottery.use:
+  pslottery.use:
     description: Allows access to the lottery
     default: true
-  lottery.admin:
-    description: Allows access to lottery admin commands
+  pslottery.admin:
+    description: Allows access to lottery admin commands (reload)
     default: op

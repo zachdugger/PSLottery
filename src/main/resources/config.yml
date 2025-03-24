@@ -1,0 +1,48 @@
+# PSLottery Configuration
+
+# Drawing settings
+drawing:
+  # Day of the week for drawing (0 = Sunday, 1 = Monday, etc.)
+  day: 0
+
+  # Hour of the day for drawing (24-hour format)
+  hour: 0
+
+  # Minute of the hour for drawing
+  minute: 0
+
+# Notification settings
+notifications:
+  # How often to broadcast lottery status (in minutes)
+  interval: 30
+
+  # Whether to send notifications to console
+  console: true
+
+# Currency settings
+currencies:
+  coins:
+    enabled: true
+    # Display name (optional, defaults to EssentialsX currency name)
+    display_name: "PokeCoins"
+    # Symbol to display before amount
+    symbol: "\$"
+    # Color code for display (without §)
+    color: "e"
+
+  tokens:
+    enabled: true
+    display_name: "Tokens"
+    symbol: "⛃"
+    color: "b"
+
+  gems:
+    enabled: true
+    display_name: "Gems"
+    symbol: "♦"
+    color: "a"
+
+# GUI settings
+gui:
+  # Title of the main menu
+  title: "Weekly Lottery"

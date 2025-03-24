@@ -8,6 +8,7 @@ import com.blissy.lottery.currency.VaultCurrency;
 import com.blissy.lottery.listeners.PlayerListener;
 import com.blissy.lottery.managers.LotteryManager;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,10 +26,15 @@ public class Lottery extends JavaPlugin {
     private net.milkbowl.vault.economy.Economy vaultEconomy;
     private me.realized.tokenmanager.TokenManagerPlugin tokenManager;
     private com.blissy.gemextension.GemExtensionPlugin gemExtension;
+    private PlayerListener playerListener;
 
     @Override
     public void onEnable() {
         instance = this;
+
+        // Debug plugin.yml location
+        File pluginFile = new File(getDataFolder().getParentFile(), "PSLottery-1.0.0.jar");
+        getLogger().info("Plugin JAR exists: " + pluginFile.exists());
 
         // Save default config
         saveDefaultConfig();
@@ -50,11 +56,32 @@ public class Lottery extends JavaPlugin {
         lotteryManager.loadData();
         lotteryManager.startScheduler();
 
-        // Register commands
-        getCommand("lottery").setExecutor(new LotteryCommand(this));
+        // Get and check the command
+        PluginCommand command = getCommand("lottery");
+        if (command == null) {
+            getLogger().severe("Failed to get lottery command! The plugin.yml might not be loaded correctly.");
+            getLogger().severe("Contents of plugin.yml in JAR might be incorrect or missing.");
+            getLogger().severe("Commands registered with server: " +
+                    Bukkit.getPluginManager().getPlugin("PSLottery").getDescription().getCommands().keySet());
+
+            try {
+                getLogger().info("Commands registered with this plugin: " +
+                        getDescription().getCommands().keySet());
+            } catch (Exception e) {
+                getLogger().severe("Could not access commands: " + e.getMessage());
+            }
+        } else {
+            // Register command executor
+            getLogger().info("Registering command executor for /lottery");
+            LotteryCommand lotteryCmd = new LotteryCommand(this);
+            command.setExecutor(lotteryCmd);
+            command.setTabCompleter(lotteryCmd);
+            getLogger().info("Command executor registered successfully!");
+        }
 
         // Register listeners
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        playerListener = new PlayerListener(this);
+        getServer().getPluginManager().registerEvents(playerListener, this);
 
         getLogger().info("Lottery has been enabled!");
 
@@ -68,9 +95,52 @@ public class Lottery extends JavaPlugin {
     public void onDisable() {
         if (lotteryManager != null) {
             lotteryManager.saveData();
+            lotteryManager.stopScheduler();
         }
 
         getLogger().info("Lottery has been disabled!");
+    }
+
+    /**
+     * Reload the plugin configuration and data
+     * @return True if reload was successful, false otherwise
+     */
+    public boolean reload() {
+        getLogger().info("Reloading PSLottery...");
+
+        // Save current lottery data before reload
+        if (lotteryManager != null) {
+            lotteryManager.saveData();
+            lotteryManager.stopScheduler();
+        }
+
+        try {
+            // Reload config
+            reloadConfig();
+            getLogger().info("Configuration reloaded");
+
+            // Reinitialize currency manager
+            currencyManager = new CurrencyManager();
+            setupCurrencies();
+            getLogger().info("Currencies reloaded");
+
+            // Reinitialize lottery manager
+            lotteryManager = new LotteryManager(this);
+            lotteryManager.loadData();
+            lotteryManager.startScheduler();
+            getLogger().info("Lottery manager reloaded");
+
+            // Schedule status notification
+            Bukkit.getScheduler().runTaskLater(this, () ->
+                            lotteryManager.broadcastLotteryStatus(),
+                    20 * 5); // 5 seconds after reload
+
+            getLogger().info("PSLottery reload complete!");
+            return true;
+        } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "Error reloading plugin", e);
+            return false;
+        }
     }
 
     private void setupFolders() {
