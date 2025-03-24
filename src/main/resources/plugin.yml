@@ -15,9 +15,9 @@ commands:
     permission: lottery.use
 
 permissions:
-  pslottery.use:
+  lottery.use:
     description: Allows access to the lottery
     default: true
-  pslottery.admin:
+  lottery.admin:
     description: Allows access to lottery admin commands
     default: op
