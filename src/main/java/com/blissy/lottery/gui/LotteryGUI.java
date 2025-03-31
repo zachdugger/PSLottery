@@ -181,18 +181,10 @@ public class LotteryGUI implements Listener {
                     // Add entry
                     boolean success = plugin.getLotteryManager().addEntry(currency, player, amount);
 
-                    if (success) {
-                        player.sendMessage(ChatColor.GREEN + "You have entered the " +
-                                currency.getColoredName() + ChatColor.GREEN + " lottery with " +
-                                currency.formatAmount(amount) + "!");
-                    }
-                } else {
-                    player.sendMessage(ChatColor.RED + "You don't have enough " +
-                            currency.getName() + " for this entry!");
-                }
+
             }
         }
-    }
+    }}
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
